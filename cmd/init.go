@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,23 +17,33 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
+	"os"
 )
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Create a serverless project",
+	Long: `Use llama init to start a project. llama will generate the basic file
+        structure and some basic code to get you started.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("init called")
+		createDirectories(args)
 	},
+}
+
+func createDirectories(args []string) {
+	current_path, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	directories := []string{"src", "terraform"}
+	for _, dir := range directories {
+		fmt.Println(dir)
+		os.Mkdir(current_path+"/"+dir, 0755)
+	}
 }
 
 func init() {
