@@ -30,12 +30,7 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "llama",
 	Short: "A multi-cloud tool for creating a serverless projects",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long: `llama is a framework for rapidly creating and deploying serverless functions into the cloud.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },

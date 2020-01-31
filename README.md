@@ -11,6 +11,7 @@ my_project/
     README.md
     config.yml
     src/code.go
+    src/entrypoint.go -- potentially useful for switching between cloud providers?
     terraform/function.tf
     terraform/provider.tf
 ```

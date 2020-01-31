@@ -29,20 +29,21 @@ var initCmd = &cobra.Command{
         structure and some basic code to get you started.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("init called")
-		createDirectories(args)
+		createProject(args)
 	},
 }
 
-func createDirectories(args []string) {
+func createProject(args []string) {
 	current_path, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	directories := []string{"src", "terraform"}
-	for _, dir := range directories {
+	os.Mkdir(current_path+"/"+args[0], 0755)
+	subDirectories := []string{"src", "terraform"}
+	for _, dir := range subDirectories {
 		fmt.Println(dir)
-		os.Mkdir(current_path+"/"+dir, 0755)
+		os.Mkdir(current_path+"/"+args[0]+"/"+dir, 0755)
 	}
 }
 
