@@ -28,11 +28,11 @@ var initCmd = &cobra.Command{
 	Long: `Use llama init to start a project. llama will generate the basic file
         structure and some basic code to get you started.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		createProject(args)
+		CreateProject(args)
 	},
 }
 
-func createProject(args []string) {
+func CreateProject(args []string) {
 	current_path, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err)
