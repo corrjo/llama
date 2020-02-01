@@ -28,7 +28,6 @@ var initCmd = &cobra.Command{
 	Long: `Use llama init to start a project. llama will generate the basic file
         structure and some basic code to get you started.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
 		createProject(args)
 	},
 }
@@ -39,10 +38,10 @@ func createProject(args []string) {
 		fmt.Println(err)
 	}
 
+	fmt.Printf("Creating project %s\n", args[0])
 	os.Mkdir(current_path+"/"+args[0], 0755)
-	subDirectories := []string{"src", "terraform"}
+	subDirectories := []string{"src", "deployment"}
 	for _, dir := range subDirectories {
-		fmt.Println(dir)
 		os.Mkdir(current_path+"/"+args[0]+"/"+dir, 0755)
 	}
 }
