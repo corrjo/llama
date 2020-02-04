@@ -49,6 +49,7 @@ func CreateProject(args []string) {
 func init() {
 	rootCmd.AddCommand(initCmd)
 
+	initCmd.Flags().StringP("lang", "l", "go", "Language of the serverless function")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
