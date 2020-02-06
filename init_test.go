@@ -23,7 +23,12 @@ func iInvokeLlamaInitMy_project() error {
 
 func aDirectoryWithAllNeededFilesWillBeCreated() error {
 	var files []string
-	expected := []string{"./my_project", "my_project/deployment", "my_project/src"}
+	expected := []string{
+		"./my_project",
+		"my_project/deployment",
+		"my_project/src",
+		"my_project/src/code.go",
+	}
 
 	err := filepath.Walk("./my_project",
 		func(path string, info os.FileInfo, err error) error {

@@ -19,7 +19,10 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"text/template"
 )
+
+var lang string
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
@@ -44,12 +47,33 @@ func CreateProject(args []string) {
 	for _, dir := range subDirectories {
 		os.Mkdir(current_path+"/"+args[0]+"/"+dir, 0755)
 	}
+	RenderTemplate(args[0], "cmd/templates/lambda_go.template", current_path+"/"+args[0]+"/src/code.go")
+}
+
+func RenderTemplate(projectName string, templateFile string, finalPath string) {
+	mapping := map[string]string{
+		"ProjectName": projectName,
+	}
+	rendered_file, err := template.ParseFiles(templateFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+	emptyFile, err := os.Create(finalPath)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = rendered_file.Execute(emptyFile, mapping)
+	if err != nil {
+		fmt.Println(err)
+	}
+	emptyFile.Close()
+
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
 
-	initCmd.Flags().StringP("lang", "l", "go", "Language of the serverless function")
+	initCmd.Flags().StringVar(&lang, "l", "go", "Language of the serverless function")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
