@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"path/filepath"
 	"text/template"
 )
 
@@ -47,7 +48,7 @@ func CreateProject(args []string) {
 	for _, dir := range subDirectories {
 		os.Mkdir(current_path+"/"+args[0]+"/"+dir, 0755)
 	}
-	RenderTemplate(args[0], "cmd/templates/lambda_go.template", current_path+"/"+args[0]+"/src/code.go")
+	RenderTemplate(args[0], GoLambdaTemplate, filepath.Join(current_path, args[0], "src", "code.go"))
 }
 
 func RenderTemplate(projectName string, templateFile string, finalPath string) {

@@ -1,4 +1,6 @@
-package main
+package cmd
+
+var GoLambdaTemplate string = `package main
 
 import (
         "fmt"
@@ -7,7 +9,7 @@ import (
 )
 
 type MyEvent struct {
-        Name string `json:"name"`
+        Name string json:"name"
 }
 
 func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
@@ -16,4 +18,4 @@ func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
 
 func main() {
         lambda.Start(HandleRequest)
-}
+}`
