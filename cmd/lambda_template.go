@@ -1,6 +1,7 @@
 package cmd
 
-var GoLambdaTemplate string = `package main
+var GoLambdaTemplate string = `// Lambda Entrypoint for {{.ProjectName}}
+package main
 
 import (
         "fmt"
@@ -9,7 +10,7 @@ import (
 )
 
 type MyEvent struct {
-        Name string json:"name"
+        Name string
 }
 
 func HandleRequest(ctx context.Context, name MyEvent) (string, error) {

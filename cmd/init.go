@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
@@ -43,31 +44,41 @@ func CreateProject(args []string) {
 	}
 
 	fmt.Printf("Creating project %s\n", args[0])
-	os.Mkdir(current_path+"/"+args[0], 0755)
+	os.Mkdir(filepath.Join(current_path, args[0]), 0755)
 	subDirectories := []string{"src", "deployment"}
 	for _, dir := range subDirectories {
-		os.Mkdir(current_path+"/"+args[0]+"/"+dir, 0755)
+		os.Mkdir(filepath.Join(current_path, args[0], dir), 0755)
 	}
-	RenderTemplate(args[0], GoLambdaTemplate, filepath.Join(current_path, args[0], "src", "code.go"))
+	err = RenderTemplate(args[0], GoLambdaTemplate, filepath.Join(current_path, args[0], "src", "code.go"))
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
 
-func RenderTemplate(projectName string, templateFile string, finalPath string) {
+func RenderTemplate(projectName string, templateVar string, finalPath string) error {
 	mapping := map[string]string{
 		"ProjectName": projectName,
 	}
-	rendered_file, err := template.ParseFiles(templateFile)
+	empty_file, err := os.Create(finalPath)
+	defer empty_file.Close()
+	if empty_file == nil {
+		return errors.New("Empty file is nil")
+	}
 	if err != nil {
 		fmt.Println(err)
 	}
-	emptyFile, err := os.Create(finalPath)
+	rendered_file, err := template.New("code").Parse(templateVar)
+	if rendered_file == nil {
+		return errors.New("rendered_file is nil")
+	}
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = rendered_file.Execute(emptyFile, mapping)
+	err = rendered_file.Execute(empty_file, mapping)
 	if err != nil {
 		fmt.Println(err)
 	}
-	emptyFile.Close()
+	return nil
 
 }
 
