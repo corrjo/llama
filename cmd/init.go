@@ -16,10 +16,15 @@ limitations under the License.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"path/filepath"
+	"text/template"
 )
+
+var lang string
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
@@ -39,16 +44,48 @@ func CreateProject(args []string) {
 	}
 
 	fmt.Printf("Creating project %s\n", args[0])
-	os.Mkdir(current_path+"/"+args[0], 0755)
+	os.Mkdir(filepath.Join(current_path, args[0]), 0755)
 	subDirectories := []string{"src", "deployment"}
 	for _, dir := range subDirectories {
-		os.Mkdir(current_path+"/"+args[0]+"/"+dir, 0755)
+		os.Mkdir(filepath.Join(current_path, args[0], dir), 0755)
 	}
+	err = RenderTemplate(args[0], GoLambdaTemplate, filepath.Join(current_path, args[0], "src", "code.go"))
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func RenderTemplate(projectName string, templateVar string, finalPath string) error {
+	mapping := map[string]string{
+		"ProjectName": projectName,
+	}
+	empty_file, err := os.Create(finalPath)
+	defer empty_file.Close()
+	if empty_file == nil {
+		return errors.New("Empty file is nil")
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+	rendered_file, err := template.New("code").Parse(templateVar)
+	if rendered_file == nil {
+		return errors.New("rendered_file is nil")
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = rendered_file.Execute(empty_file, mapping)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return nil
+
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
 
+	initCmd.Flags().StringVar(&lang, "l", "go", "Language of the serverless function")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
